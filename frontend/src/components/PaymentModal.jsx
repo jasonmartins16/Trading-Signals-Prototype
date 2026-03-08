@@ -4,23 +4,25 @@ export default function PaymentModal({ isOpen, onClose, userEmail, onSuccess }) 
   const handleSimulatePayment = async () => {
     try {
       const token = localStorage.getItem('token');
-      
+      // Use the environment variable instead of localhost
+      const apiUrl = import.meta.env.VITE_API_URL;
+
       // 1. Create Checkout Session
-      const checkoutRes = await fetch('http://localhost:8000/billing/create-checkout', {
+      const checkoutRes = await fetch(`${apiUrl}/billing/create-checkout`, {
         method: 'POST',
-        headers: { 
-          'Authorization': `Bearer ${token}` 
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (!checkoutRes.ok) {
         throw new Error('Failed to create checkout session');
       }
-      
+
       const { session_id } = await checkoutRes.json();
-      
+
       // 2. Simulate Stripe Webhook Callback
-      const webhookRes = await fetch('http://localhost:8000/billing/simulate-webhook', {
+      const webhookRes = await fetch(`${apiUrl}/billing/simulate-webhook`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -49,26 +51,26 @@ export default function PaymentModal({ isOpen, onClose, userEmail, onSuccess }) 
           <h3 className="text-xl font-bold text-slate-800">Upgrade to Premium</h3>
           <p className="text-sm text-slate-500 mt-1">Get full access to all trading signals</p>
         </div>
-        
+
         <div className="p-6 space-y-4">
           <div className="flex justify-between items-center py-2 border-b border-slate-100">
             <span className="text-slate-600">Trading Signals Pro</span>
             <span className="font-semibold text-slate-800">₹499 / lifetime</span>
           </div>
-          
+
           <div className="bg-blue-50 text-blue-800 p-4 rounded-xl text-sm leading-relaxed border border-blue-100">
             This is a mock checkout. Clicking "Simulate Payment" will fire a webhook to our backend, update your status, and instantly upgrade your account.
           </div>
         </div>
 
         <div className="p-6 bg-slate-50 border-t border-slate-100 flex gap-3 justify-end items-center">
-          <button 
+          <button
             onClick={onClose}
             className="px-4 py-2 text-slate-600 font-medium hover:bg-slate-200 rounded-lg transition-colors"
           >
             Cancel
           </button>
-          <button 
+          <button
             onClick={handleSimulatePayment}
             className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40"
           >

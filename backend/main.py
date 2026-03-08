@@ -30,6 +30,22 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Trading Signals API", lifespan=lifespan)
 
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+
+# The "Antigravity" fix: Forces all headers to report as HTTPS
+class ForceHTTPSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        # This tells FastAPI: "Even if you think you're on http, you're actually on https"
+        request.scope["scheme"] = "https"
+        response = await call_next(request)
+        return response
+
+app.add_middleware(ForceHTTPSMiddleware)
+
+# Optional: Add the standard redirect as well
+# app.add_middleware(HTTPSRedirectMiddleware)
+
 # CORS for frontend
 app.add_middleware(
     CORSMiddleware,
@@ -44,7 +60,7 @@ import os
 redis_url = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
 redis_client = redis.from_url(redis_url, decode_responses=True)
 
-@app.middleware("http")
+@app.middleware("https")
 async def rate_limit_auth(request: Request, call_next):
     if request.url.path.startswith("/auth"):
         client_ip = request.client.host
