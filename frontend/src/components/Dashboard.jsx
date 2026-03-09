@@ -50,6 +50,11 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchDashboardData();
+    const intervalId = setInterval(() => {
+        fetchDashboardData();
+    }, 10000); // Poll every 10 seconds for real-time live prices
+    
+    return () => clearInterval(intervalId); // Cleanup boundary on unmount
   }, [navigate]);
 
   const handleLogout = () => {
