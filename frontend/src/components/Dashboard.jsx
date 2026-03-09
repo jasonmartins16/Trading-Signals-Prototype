@@ -52,7 +52,7 @@ export default function Dashboard() {
     fetchDashboardData();
     const intervalId = setInterval(() => {
         fetchDashboardData();
-    }, 10000); // Poll every 10 seconds for real-time live prices
+    }, 5000); // Poll every 10 seconds for real-time live prices
     
     return () => clearInterval(intervalId); // Cleanup boundary on unmount
   }, [navigate]);
