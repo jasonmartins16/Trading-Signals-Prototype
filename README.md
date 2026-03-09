@@ -28,7 +28,7 @@ This is a complete, working prototype for a Trading Signals SaaS application bui
   - JWT Authentication (`/auth/signup`, `/auth/login`, `/auth/me`).
   - Redis-based rate limiting on auth endpoints (max 5 requests/min).
   - Webhook Idempotency: Redis-backed processing for payment webhook (`/billing/simulate-webhook`) preventing duplicate updates per `transaction_id`.
-  - Core Domain: Mock Signals generator (`/signals`) with Read-Through Redis caching (5 min TTL) and access control (`is_paid` restriction).
+  - Core Domain: **Live Dhan API Integration** for generating trading signals of top Indian tech stocks and executing real market orders dynamically dynamically based on users' portfolio balance.
 - **Frontend (React/Vite)**:
   - Clean Tailwind CSS UI with React Router support.
   - Auth flow saving JWT to `localStorage`.
@@ -39,6 +39,7 @@ This is a complete, working prototype for a Trading Signals SaaS application bui
 
 - **Python 3.10+**
 - **Node.js 18+**
+- **DhanHQ API Credentials**: A Dhan account with `DHAN_API_KEY` and `DHAN_CLIENT_ID`.
 - **Redis Server** must be running locally on default port `6379`. (If Redis isn't running, the app has graceful fallbacks, but idempotency and rate limiting will be bypassed).
 
 ---
@@ -57,6 +58,11 @@ cd backend
 # The virtual environment is already created
 # Activate it (Windows):
 .\venv\Scripts\activate
+
+# Create a .env file and add your Dhan credentials:
+# DHAN_API_KEY=your_dhan_api_key
+# DHAN_CLIENT_ID=your_dhan_client_id
+```
 
 # Install dependencies (already done if following setup)
 pip install -r requirements.txt
