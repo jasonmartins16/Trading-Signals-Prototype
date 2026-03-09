@@ -28,11 +28,11 @@ This is a complete, working prototype for a Trading Signals SaaS application bui
   - JWT Authentication (`/auth/signup`, `/auth/login`, `/auth/me`).
   - Redis-based rate limiting on auth endpoints (max 5 requests/min).
   - Webhook Idempotency: Redis-backed processing for payment webhook (`/billing/simulate-webhook`) preventing duplicate updates per `transaction_id`.
-  - Core Domain: **Live Dhan API Integration** for generating trading signals of top Indian tech stocks and executing real market orders dynamically dynamically based on users' portfolio balance.
+  - Core Domain: **Live Dhan API Integration** for generating trading signals of top Indian tech stocks, with Read-Through Redis caching (5s TTL) and real market order execution dynamically based on users' portfolio balance.
 - **Frontend (React/Vite)**:
   - Clean Tailwind CSS UI with React Router support.
   - Auth flow saving JWT to `localStorage`.
-  - Dashboard dynamically rendering limited signals for free users.
+  - Dashboard dynamically rendering limited signals for free users, with 5-second automatic polling for live price updates.
   - Mock Payment Checkout modal simulating a real payment gateway webhook.
 
 ## Prerequisites
