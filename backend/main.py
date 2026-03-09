@@ -32,6 +32,10 @@ app = FastAPI(title="Trading Signals API", lifespan=lifespan)
 
 
 
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
+
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
+
 import redis
 
 # CORS for frontend
@@ -45,7 +49,8 @@ app.add_middleware(
         "http://127.0.0.1:8080",
         "http://192.168.31.127:8080",
         "http://192.168.31.127:5173",
-        "https://dependable-charm-production.up.railway.app"
+        "https://dependable-charm-production.up.railway.app",
+        "http://dependable-charm-production.up.railway.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
