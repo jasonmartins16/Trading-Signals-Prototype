@@ -13,7 +13,7 @@ from auth import get_current_user
 import os
 from dhanhq import dhanhq
 
-load_dotenv()
+load_dotenv() # Force reload for .env variables
 
 router = APIRouter(prefix="/signals", tags=["signals"])
 
